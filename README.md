@@ -1,9 +1,8 @@
 `xcolor`
 ====================
+**Automatically beautiful**
 
-Description
------------
-An extensive color manipulation library.
+An extensive color manipulation library for the browser and node.js. While extensive, this library is less than 6KB in size (minified and gzipped).
 
 Calculating Colors
 ---
@@ -43,7 +42,7 @@ npm install xolor
 Usage
 =====
 
-Accessing keysight:
+Accessing xolor:
 ```javascript
 // node.js
 var xolor = require('xolor')
@@ -54,7 +53,7 @@ require(['xolor'], function(xolor) { /* your code */ })
 
 // global variable
 <script src="xolor.umd.js"></script>
-xolor; // xolor.umd.js can define keysight globally if you really
+xolor; // xolor.umd.js can define xolor globally if you really
           //   want to shun module-based design
 ```
 
@@ -79,7 +78,7 @@ How to submit pull requests:
 3. clone your forked repo onto your machine and run `npm install` at its root
 4. If you're gonna work on multiple separate things, its best to create a separate branch for each of them
 5. edit!
-6. If it's a code change, please add to the unit tests (at test/odiffTest.js) to verify that your change
+6. If it's a code change, please add to the unit tests (at test/xolor.js) to verify that your change
 7. When you're done, run the unit tests and ensure they all pass
 8. Commit and push your changes
 9. Submit a pull request: https://help.github.com/articles/creating-a-pull-request
@@ -89,11 +88,32 @@ Change Log
 
 * 1.0.0 - Created based on https://github.com/infusion/jQuery-xcolor
 
+Todo
+=====
+
+* documentation
+* Incorporate more color methods from less.js
+  * http://lesscss.org/functions/#color-channel
+  * http://lesscss.org/functions/#color-operations
+  * http://lesscss.org/functions/#color-blending
+* Incorporate color methods from the "other useful javascript color modules"
+* Write tests
+
 Thanks
 ========
 
-Thanks goes out to dmauro who's [Keypress module](https://github.com/dmauro/Keypress) is where I got most of the keymapping information from.
+Thanks goes out to:
+* Robert Eisele who's [xColor jQuery plugin](https://github.com/infusion/jQuery-xcolor) is where I got much of the code for this module.
 
 License
 =======
 Dual licensed under the [MIT](http://opensource.org/licenses/MIT) or GPL Version 2 licenses.
+
+Other useful javacript color modules
+=======
+
+These modules may have manipulation methods not contained in this library:
+* https://github.com/Qix-/color
+* https://github.com/brehaut/color-js
+* https://github.com/mbjordan/Colors
+* https://github.com/gka/chroma.js

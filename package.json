@@ -1,0 +1,25 @@
+{"name":"xolor",
+ "description": "Color manipulation library",
+ "keywords": ["color", "xcolor", "primary", "parse", "complimentary", "complementary", "gradient", "triad", "tetrad", "colors"],
+ "version":"1.0.0",
+ "main": "xolor.js",
+ "contributors": [
+     "Billy Tetrud <bitetrudpublic@gmail.com> (https://github.com/fresheneesz/)",
+     "Robert Eisele <robert@xarg.org> (https://github.com/infusion)"
+ ],
+ "license": {
+   "name": "MIT",
+   "url": "http://www.opensource.org/licenses/mit-license.php"
+ },
+ "repository": {
+   "type": "git",
+   "url": "git://github.com/fresheneesz/xolor"
+ },
+ "dependencies": {
+   "proto": "*"
+ },
+ "devDependencies": {
+    "build-modules":"2.0.5",
+    "colors":"*"
+ }
+}

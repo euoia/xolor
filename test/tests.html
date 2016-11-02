@@ -1,0 +1,26 @@
+<!DOCTYPE html><html>
+<head></head>
+<body>
+<div id='readable'>I'm readble yay</div>
+<div id='notReadable'>I'm not readable : (</div>
+</body>
+
+<script src="../dist/xolor.umd.js"></script>
+<!--<script src="/test/external/jquery2.0.4.min.js"></script>-->
+<!--<script src="/test/generated/tests.umd.js"></script>-->
+
+
+<script>
+    console.log("Readble: "+xolor.readable(document.getElementById('readable')))
+    console.log("Not readble: "+(!xolor.readable(document.getElementById('readable'))))
+
+    var things = [
+        xolor('rgb(1,50,200)').css,
+        xolor('rgb(1,50,200)').hsv,
+        xolor('rgb(1,50,200)').add(xolor('rgb(1,50,200)'))
+    ]
+
+    things.forEach(function(t) {
+        console.log(t)
+    })
+</script>

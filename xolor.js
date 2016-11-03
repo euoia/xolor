@@ -442,9 +442,9 @@ var xolor = module.exports = proto(function() {
             var roundedLevel = Math.round(level) // fractions won't work here
             var levelChange = roundedLevel - this.lightness()
 
-            var r = this.r+levelChange
-            var g = this.g+levelChange
-            var b = this.b+levelChange
+            var r = Math.max(0,this.r+levelChange)
+            var g = Math.max(0,this.g+levelChange)
+            var b = Math.max(0,this.b+levelChange)
 
             if(r > 0xff) r = 0xff
             if(g > 0xff) g = 0xff
@@ -464,9 +464,7 @@ var xolor = module.exports = proto(function() {
 	// returns a lighter (or darker) color
 	// level should be a value from -255 to 255
 	this.lighter = function(level) {
-        var newColor = xolor(this)
-        newColor.lightness += level
-        return newColor
+        return newColor.lightness(newColor.lightness()+level)
 	}
 
 	// ratio - What fraction to lighten by (a value from -1 to 1).

@@ -440,7 +440,7 @@ var xolor = module.exports = proto(function() {
             return Math.max(this.g,this.r,this.b)
         } else {
             var roundedLevel = Math.round(level) // fractions won't work here
-            var levelChange = roundedLevel - this.lightness
+            var levelChange = roundedLevel - this.lightness()
 
             var r = this.r+levelChange
             var g = this.r+levelChange
@@ -458,7 +458,7 @@ var xolor = module.exports = proto(function() {
     // returns a new xolor with the lightness level based on a ratio of the current lightness
 	    // e.g. .5 darkens by 50% and 1.5 lightens by 50%
     this.relLightness = function(ratio) {
-        return this.lightness(this.lightness*ratio)
+        return this.lightness(this.lightness()*ratio)
     }
 
 	// returns a lighter (or darker) color

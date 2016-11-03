@@ -4,7 +4,12 @@
 <div id='readable'>I'm readble yay</div>
 <div id='notReadable'>I'm not readable : (</div>
 </body>
-
+<style>
+    #notReadable {
+        color: white;
+        background-color: yellow;
+    }
+</style>
 <script src="../dist/xolor.umd.js"></script>
 <!--<script src="/test/external/jquery2.0.4.min.js"></script>-->
 <!--<script src="/test/generated/tests.umd.js"></script>-->
@@ -12,7 +17,7 @@
 
 <script>
     console.log("Readble: "+xolor.readable(document.getElementById('readable')))
-    console.log("Not readble: "+(!xolor.readable(document.getElementById('readable'))))
+    console.log("Not readble: "+(!xolor.readable(document.getElementById('notReadable'))))
 
     var things = [
         xolor('rgb(1,50,200)').css,

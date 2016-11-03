@@ -86,6 +86,7 @@ How to submit pull requests:
 Change Log
 =========
 
+* 1.1.0 - Changed lightness and relLightness from getter/setters to functions
 * 1.0.0 - Created based on https://github.com/infusion/jQuery-xcolor
 
 Todo

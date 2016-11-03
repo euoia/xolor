@@ -14,7 +14,8 @@ exports.buildAndWatch = function() {
 }
 
 function doyourthang(watch) {
-    build(moduleName, watch, {name: moduleName, output: {path:__dirname+'/dist/', name: moduleName+".umd.js"}})
+    build(moduleName, watch, {name: moduleName, output: {path:__dirname+'/dist/', name: moduleName+".umd.min.js"}})
+    build(moduleName, watch, {name: moduleName, output: {path:__dirname+'/dist/', name: moduleName+".umd.js"}, minify:false})
 //    build("./test/tests", watch, {name: 'tests', minify: false, output: {path:__dirname+'/test/generated/'}})
 }
 

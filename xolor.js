@@ -430,38 +430,36 @@ var xolor = module.exports = proto(function() {
         }
     })
 
-    Object.defineProperty(this, 'lightness', {
-        get: function() {
+    // instance methods
+
+    // gets the lightness level (a value from 0 to 255) or returns a new xolor with the new lightness level
+        // if level is undefined, returns the lightness level
+        // otherwise will return a
+	this.lightness = function(level) {
+        if(level === undefined) {
             return Math.max(this.g,this.r,this.b)
-        },
-
-        // changes the lightness level
-        // level - a value from 0 to 255
-        set: function(level) {
+        } else {
             var roundedLevel = Math.round(level) // fractions won't work here
-            var levelChange = level - this.lightness
+            var levelChange = roundedLevel - this.lightness
 
-            this.r += levelChange
-            this.g += levelChange
-            this.b += levelChange
+            var r = this.r+levelChange
+            var g = this.r+levelChange
+            var b = this.r+levelChange
 
-            if(this.r > 0xff) this.r = 0xff
-            if(this.g > 0xff) this.g = 0xff
-            if(this.b > 0xff) this.b = 0xff
+            if(r > 0xff) r = 0xff
+            if(g > 0xff) g = 0xff
+            if(b > 0xff) b = 0xff
+
+            return xolor({r: r, g: g, b: b})
         }
-    })
+	}
 
     // relative lightness
-    Object.defineProperty(this, 'relLightness', {
-        // changes the lightness level based on a ratio of the current lightness
+    // returns a new xolor with the lightness level based on a ratio of the current lightness
 	    // e.g. .5 darkens by 50% and 1.5 lightens by 50%
-        set: function(level) {
-            this.lightness = this.lightness*ratio
-        }
-    })
-
-
-    // instance methods
+    this.relLightness = function() {
+        return this.lightness(this.lightness*ratio)
+    }
 
 	// returns a lighter (or darker) color
 	// level should be a value from -255 to 255

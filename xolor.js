@@ -457,7 +457,7 @@ var xolor = module.exports = proto(function() {
     // relative lightness
     // returns a new xolor with the lightness level based on a ratio of the current lightness
 	    // e.g. .5 darkens by 50% and 1.5 lightens by 50%
-    this.relLightness = function() {
+    this.relLightness = function(ratio) {
         return this.lightness(this.lightness*ratio)
     }
 

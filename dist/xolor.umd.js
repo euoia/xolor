@@ -304,9 +304,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 	
 	        this.a = Math.round(this.a)
-	        this.r = Math.round(this.a)
-	        this.g = Math.round(this.a)
-	        this.b = Math.round(this.a)
+	        this.r = Math.round(this.r)
+	        this.g = Math.round(this.g)
+	        this.b = Math.round(this.b)
 		}
 	
 	    // instance properties

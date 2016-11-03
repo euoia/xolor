@@ -1,7 +1,7 @@
 {"name":"xolor",
  "description": "Color manipulation library",
  "keywords": ["color", "xcolor", "primary", "parse", "complimentary", "complementary", "gradient", "triad", "tetrad", "colors"],
- "version":"1.1.4",
+ "version":"1.1.6",
  "main": "xolor.js",
  "contributors": [
      "Billy Tetrud <bitetrudpublic@gmail.com> (https://github.com/fresheneesz/)",

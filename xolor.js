@@ -243,6 +243,11 @@ var xolor = module.exports = proto(function() {
 		} else {
             throw new Error('Invalid color')
 		}
+
+        this.a = Math.round(this.a)
+        this.r = Math.round(this.a)
+        this.g = Math.round(this.a)
+        this.b = Math.round(this.a)
 	}
 
     // instance properties
@@ -464,7 +469,7 @@ var xolor = module.exports = proto(function() {
 	// returns a lighter (or darker) color
 	// level should be a value from -255 to 255
 	this.lighter = function(level) {
-        return newColor.lightness(newColor.lightness()+level)
+        return this.lightness(this.lightness()+level)
 	}
 
 	// ratio - What fraction to lighten by (a value from -1 to 1).

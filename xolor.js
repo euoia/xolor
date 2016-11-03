@@ -443,8 +443,8 @@ var xolor = module.exports = proto(function() {
             var levelChange = roundedLevel - this.lightness()
 
             var r = this.r+levelChange
-            var g = this.r+levelChange
-            var b = this.r+levelChange
+            var g = this.g+levelChange
+            var b = this.b+levelChange
 
             if(r > 0xff) r = 0xff
             if(g > 0xff) g = 0xff

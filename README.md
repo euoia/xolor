@@ -59,8 +59,115 @@ xolor; // xolor.umd.js can define xolor globally if you really
 
 Using xolor:
 
-Full usage docs on their way..
+**`xolor(cssColorString)`** - Constructor. Takes in either a css color like `"lightskyblue"`, `"#fff"`, `"#fff000"`, `"rgb(1, 234, 56)"`, `"rgb(66%, 55%, 44%)"`, or  
+**`xolor(rgbObject)`** - an rgb object like `{r:34,g:45,b:56}`, or  
+**`xolor(rgbString)`** - a comma-sparated rgb string like `"34,45,56"`, or  
+**`xolor(rgbArray)`** - an array where each element is interpreted as an rgba component [r,g,b,a] like `[34,45,56]`, or  
+**`xolor(hslColorString)`** - an [hsl/hsb](https://en.wikipedia.org/wiki/HSL_and_HSV) color like `"hsl(10, 90, 20)"` or `"hsb(10, 90, 20)"`  
+**`xolor(hslObject)`** - an hsl object like `{h:10,s:90,l:20}` or `{h:10,s:90,b:20}`, or  
+**`xolor(hsvColorString)`** - an [hsv](https://en.wikipedia.org/wiki/HSL_and_HSV) color like `"hsv(64, 40, 16)"`  
+**`xolor(hslObject)`** - an hsv object like `{h:64,s:40,v:16}`, or  
+**`xolor(integer)`** - an integer where the least significant 2 bytes represent blue, the next 2 bytes represent green, the next 2 represent red, and the most significant bytes represent alpha.
 
+**`xolor(xolorObject)`** - Returns a copy of the passed in xolor object.
+
+**`xolor.random()`** - Returns a xolor object representing a random color with 100% opacity.
+
+**`xolor.readable(background, textColor, fontSize)`** - Returns true if text will be readable at the given size with the given background and text colors.  
+**`xolor.readable(domNode)`**
+* `background` - The background color. *Can be any value the `xolor` constructor can take in.*
+* `textcolor` - The text color. *Can be any value the `xolor` constructor can take in.*
+* `fontSize` - The font size in pixels. Default: 10.
+* `domNode` - A domNode to check for readability.
+
+**`xolor.colorize(domNode, from, to, methodFn)`** - Colors the text within a domNode.  
+**`xolor.colorize(domNode, from, to, methodString)`**
+* `domNode` - The domNode to color.
+* `from` - The color the first letter should be.
+* `to` - The color the last letter should be.
+* `methodFn(charsProcessed,textLength,lastPosition,character)` - The method used to transition between `from` and `to`. Is a function that should return a number between 0 and 1 indicating how far from `from` and how close to `to` the color will be at the given position.
+  * `charsProcessed` - The number of characters tha have been processed (ie the index of the character).
+  * `textLength` - The full length of text in this node.
+  * `lastPosition` - The last position returned by a call to this method. Starts at 0.
+  * `character` - The character at the given position.
+* `methodString` - The method used to transition between `from` and `to`. Can be one of the following values:
+  * `"gradient"` - A smooth gradient between `from` and `to`.
+  * `"flip"` - Flips between `from` and `to` every visible character.
+  * `"pillow"` - A smooth gradient between `from` and `to` and back to `from`.
+
+####Instance methods and properties:
+Xolor objects are always immutable - all operations on them return new objects. Any of these methods are, consequently, chainable.
+
+**`xolorObject.r`** - Returns the red part of the xolor.
+**`xolorObject.g`** - Returns the green part of the xolor.
+**`xolorObject.b`** - Returns the blue part of the xolor.
+**`xolorObject.a`** - Returns the alpha part of the xolor.
+**`xolorObject.rbg`** - Returns an rbga object representing the color (like `{r:34,g:45,b:56,a:1}`).  
+**`xolorObject.css`** - Returns a css color string representing the color (either `"transparent"` or a css rbg or rbga string like `"rgb(1, 234, 56)"`).  
+**`xolorObject.fraction`** - Returns an rbga object where each property is a number from 0 to 1 representing a percentage of full color. To clarify, `xolor('rbg(10%,20%,30%)').fraction` would return `[0.1, 0.2, 0.3]`.  
+**`xolorObject.array`** - Returns an array where each element represents an rgba value. To clarify, `xolor('rbg(20,50,100)').array` would return `[20,50,100]`.  
+**`xolorObject.hsl`** - Returns an hsla object representing the color.  
+**`xolorObject.hsv`** - Returns an hsva object representing the color.  
+**`xolorObject.hex`** - Returns a hex string value representing the color.  
+**`xolorObject.toString()`** - Same as `xolorObject.hex`.  
+**`xolorObject.int`** - Returns an integer where the least significant 2 bytes represent blue, the next 2 bytes represent green, the next 2 represent red, and the most significant bytes represent alpha.  
+**`xolorObject.name`** - Returns the closest name for the color from this list: http://www.w3.org/TR/css3-color/#svg-color 
+
+**`xolorObject.lightness(level)`** - Returns a xolor with the lightness changed to the given level (a number between 0 and 255).  
+**`xolorObject.relLightness(ratio)`** - Returns a xolor with the lightness changed by the passed `ratio` of the current lightness. For example, a `ratio` of `.5` darkens by 50% and `1.5` lightens by 50%.  
+**`xolorObject.lighter(amount)`** - Returns a xolor that is lighter by the given `amount` (a number between 0 and 255).
+
+**`xolorObject.sepia()`** - Returns a xolor filtered by [microsoft's sepia filter](http://msdn.microsoft.com/en-us/magazine/cc163866.aspx).  
+**`xolorObject.inverse()`** - Returns the inverse xolor.  
+**`xolorObject.greyfilter(method)`** - Returns a grey version of the xolor.
+* `method` - *(Default: 1)* Can be:
+   * `1` - Robert Eisele's grey filter method
+   * `2` - Sun's grey filter method
+   * `3` - An unknown grey filter method (I'm not sure where it came from)
+
+**`xolorObject.red()`** - Returns a xolor with just the red part.
+**`xolorObject.green()`** - Returns a xolor with just the green part.
+**`xolorObject.blue()`** - Returns a xolor with just the blue part.
+**`xolorObject.web()`** - Returns a ["web safe"](https://en.wikipedia.org/wiki/Web_colors) xolor.  
+**`xolorObject.complementary()`** - Returns the [complementary color](https://en.wikipedia.org/wiki/Complementary_colors).  
+**`xolorObject.comp()`** - Alias for `complementary`.
+
+
+** Combinations two colors:**
+
+Each of these functions returns a new xolor object based on a function of two colors.
+
+**`xolorObject.opacity(topColor, opacity)`** - Returns the color that would show if `topColor` was over the `xolorObject`'s color with the given `opacity`.
+**`xolorObject.combine(otherColor)`** - Returns the two colors combined with a ximple XOR method.
+**`xolorObject.breed(otherColor)`** - Returns a xolor with random parts of each color.
+**`xolorObject.add(otherColor)`** - Returns the [additive mix](https://en.wikipedia.org/wiki/Additive_color) of the two colors.
+**`xolorObject.subtractive(otherColor)`** - Returns the [subtractive mix](https://en.wikipedia.org/wiki/Subtractive_color) of the two colors.
+**`xolorObject.subtract(otherColor)`** - Returns the subtraction of the two colors. I don't believe this is a standard color method.
+**`xolorObject.mult(otherColor)`** - Returns the multiplicative mix of the two colors
+**`xolorObject.multiply(otherColor)`** - Alias for `mult`.
+**`xolorObject.avg(otherColor)`** - Returns a color between the two colors by averaging the rgb parts.
+**`xolorObject.average(otherColor)`** - Alias for `avg`.
+**`xolorObject.gradient(otherColor, position)`** - Returns the color on a gradient between the two colors at the given `position` on the gradient.
+* `otherColor` - Can be any value the `xolor` constructor can take in.
+* `position` - A number from 0 to 1 representing how close to `otherColor` the returned color should be (where 1 represents the `otherColor` exactly).
+
+** Related colors: **
+
+The following methods return arrays of xolor objects.
+
+**`xolorObject.triad()`** - Returns the color's [triad](https://en.wikipedia.org/wiki/Color_scheme#Triadic_colors).  
+**`xolorObject.tetrad()`** - Returns the color's [tetrad](https://en.wikipedia.org/wiki/Color_scheme#Tetradic_colors).  
+**`xolorObject.splitcomplement()`** - Returns the color's [split complement](https://en.wikipedia.org/wiki/Color_scheme#Split-Complementary) colors.  
+**`xolorObject.splitcomp()`** - Alias for `splitcomplement`.  
+**`xolorObject.monochromatic(number)`** - Returns an array of [monochromatic colors](https://en.wikipedia.org/wiki/Monochromatic_color).  
+**`xolorObject.monochromes(number)`** - Alias for `monochromatic`.  
+**`xolorObject.analogous(number, slices)`** - Returns an array of [analogous color](https://en.wikipedia.org/wiki/Analogous_colors).
+* `number` - *(Default:8)* The number of colors to return.
+* `slices` - *(Default:32)* I'm not entirely sure what this parameter is.
+
+** Miscellaneous: **
+
+**`xolorObject.distance(from)`** - Returns an integer representing the "distance" between the `xolorObject`'s color and the `from` color. `from` can be any value you can pass into the `xolor` constructor. See [here](http://www.compuphase.com/cmetric.htm) for details.
 
 How to Contribute!
 ============
@@ -86,6 +193,7 @@ How to submit pull requests:
 Change Log
 =========
 
+* 1.1.8 - Fixing colorize and adding full documentation
 * 1.1.0 - Changed lightness and relLightness from getter/setters to functions
 * 1.0.0 - Created based on https://github.com/infusion/jQuery-xcolor
 

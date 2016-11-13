@@ -99,6 +99,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // todo: if alpha != 1, use opacity() to calculate correct color on certain element and it's parent
 	            var background = b
 	            var textColor = f
+	            var textSize = window.getComputedStyle(arguments[0]).getPropertyValue("fontSize")
 	
 	        } else { // arguments.length === 3
 	            var background = arguments[0]
@@ -118,7 +119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              && (diff > (-.5 - 154.709 * Math.pow(0.990, textSize))))
 	    }
 	
-	    var modifiers = {
+	    var colorizeModifiers = {
 	        // Returns number in [0, 1] (0 = FROM, 1 = TO)
 	        gradient: function (k, l, diff, c) {
 	            return k / l;
@@ -134,55 +135,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	
-	    this.colorize = function(domNode, FROM, TO, TYPE) {
-	        if ("function" !== typeof TYPE) {
-	            TYPE = modifiers[TYPE]
+	    this.colorize = function(domNode, FROM, TO, method) {
+	        if ("function" !== typeof method) {
+	            method = colorizeModifiers[method]
 	        }
 	
 	        FROM = new xolor(FROM)
 	        TO   = new xolor(TO)
 	
-	        var tmp  = this.childNodes, LEN = 0, K = 0;
+	        var characterLength = 0, charactersProcessed = 0, position = 0
 	
 	        // get the full text length of the domNode
-	        for (var i = tmp.length; i--; LEN+= tmp[i]["textContent"].length){}
+	        var tmp  = domNode.childNodes
+	        for (var i = 0; i<tmp.length; i++){
+	            characterLength+= tmp[i]["textContent"].length
+	        }
 	
 	        var replace = function(node) {
-	            var i = 0,
-	                len;
-	
 	            if (3 === node.nodeType) {
-	                var x = FROM;
-	                var y = TO;
-	                var l = LEN;
-	                var elem, ctx, diff = 0, c, calc = TYPE;
+	                var rDiff = TO.r - FROM.r
+	                var gDiff = TO.g - FROM.g
+	                var bDiff = TO.b - FROM.b
+	                var aDiff = TO.a - FROM.a
 	
-	                len = node.nodeValue.length;
-	                ctx = document.createElement('span');
 	
-	                for (i = 0; i < len; ++i) {
-	                    elem = document.createElement('span');
-	                    c    = node.nodeValue.charAt(i);
+	                var ctx = document.createElement('span'), len = node.nodeValue.length
+	                for(var i = 0; i < len; i++) {
+	                    var elem = document.createElement('span')
+	                    var c    = node.nodeValue.charAt(i)
 	
-	                    diff = calc(K, l, diff, c);
+	                    position = method(charactersProcessed, characterLength, position, c);
 	
-	                    elem["style"]["color"] =_RGBAtoCSS(
-	                        x.r + diff * (y.r - x.r)|0,
-	                        x.g + diff * (y.g - x.g)|0,
-	                        x.b + diff * (y.b - x.b)|0,
-	                        x.a + diff * (y.a - x.a)
+	                    elem.style.color =_RGBAtoCSS(
+	                        FROM.r + position * rDiff|0,
+	                        FROM.g + position * gDiff|0,
+	                        FROM.b + position * bDiff|0,
+	                        FROM.a + position * aDiff
 	                    );
 	
 	                    elem.appendChild(document.createTextNode(c))
 	                    ctx.appendChild(elem)
-	                    ++K
+	                    charactersProcessed++
 	                }
 	
 	                node.parentNode.replaceChild(ctx, node)
 	
 	            } else {
-	                for (len = node.childNodes.length; i < len; ++i) {
-	                    replace(node.childNodes[i]);
+	                var len = node.childNodes.length
+	                for(var n=0; n < len; n++) {
+	                    replace(node.childNodes[n])
 	                }
 	            }
 	        }
@@ -203,21 +204,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var part, c;
 	
 	            if ('transparent' === color) {
-	                this.a = /* void */
-	                this.r = /* void */
-	                this.g = /* void */
-	                this.b = 0;
-	
-	            } else if ('rand' === color) {
-	                c = Math.random() * 0xffffff|0;
-	                this.a = 1;
-	                this.r = ((c >> 16) & 0xff);
-	                this.g = ((c >>  8) & 0xff);
-	                this.b = ((c      ) & 0xff);
-	
+	                this.a = this.r = this.g = this.b = 0;
 	            } else {
-	                if (undefined !== color_names[color]) {
-	                    color = '#' + color_names[color];
+	                if (color in colorNames) {
+	                    color = '#' + colorNames[color]
 	                }
 	
 	                if ((part = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/.exec(color))) {  // #ff9000, #ff0000
@@ -244,7 +234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.g = Math.round(2.55 * _normalize(part[2], 100));
 	                    this.b = Math.round(2.55 * _normalize(part[3], 100));
 	
-	                } else if ((part = /^hs([bvl])a?\((\d{1,3}),(\d{1,3}),(\d{1,3})(,([0-9.]+))?\)$/.exec(color))) { // hsv(64, 40, 16) in [0, 360], [0,100], [0,100]
+	                } else if ((part = /^hs([bvl])a?\((\d{1,3}),(\d{1,3}),(\d{1,3})(,([0-9.]+))?\)$/.exec(color))) { // hsv(64, 40, 16) in [0, 360], [0,100], [0,100] or hsl(10, 90, 20)
 	                    var func;
 	                    if ("l" === part[1]) {
 	                        func = _hsl;
@@ -337,32 +327,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Object.defineProperty(this, 'array', {
 	        get: function() {
 	            return [this.r, this.g, this.b, 100 * this.a|0]
-	        }
-	    })
-	
-	    // nearest name
-	    Object.defineProperty(this, 'name', {
-	        get: function() {
-	            var lowest = null;
-	            var lowest_ndx;
-	
-	            var table = color_names;
-	
-	            var a = this.hsl
-	
-	            for (var i in table) {
-	
-	                /* We do not handle transparency */
-	                var b = xolor(table[i]).hsl
-	
-	                var tmp = Math.sqrt(.5 * (a["h"] - b["h"]) * (a["h"] - b["h"]) + .5 * (a["s"] - b["s"]) * (a["s"] - b["s"]) + (a["l"] - b["l"]) * (a["l"] - b["l"]));
-	
-	                if (null === lowest || tmp < lowest) {
-	                    lowest = tmp;
-	                    lowest_ndx = i;
-	                }
-	            }
-	            return lowest_ndx
 	        }
 	    })
 	
@@ -494,6 +458,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    })
 	
+	    // nearest name
+	    Object.defineProperty(this, 'name', {
+	        get: function() {
+	            var lowest = null;
+	            var lowest_ndx;
+	
+	            var table = colorNames;
+	
+	            var a = this.hsl
+	
+	            for (var i in table) {
+	
+	                /* We do not handle transparency */
+	                var b = xolor(table[i]).hsl
+	
+	                var tmp = Math.sqrt(.5 * (a["h"] - b["h"]) * (a["h"] - b["h"]) + .5 * (a["s"] - b["s"]) * (a["s"] - b["s"]) + (a["l"] - b["l"]) * (a["l"] - b["l"]));
+	
+	                if (null === lowest || tmp < lowest) {
+	                    lowest = tmp;
+	                    lowest_ndx = i;
+	                }
+	            }
+	            return lowest_ndx
+	        }
+	    })
+	
 	    // instance methods
 	
 	    // gets the lightness level (a value from 0 to 255) or returns a new xolor with the new lightness level
@@ -527,13 +517,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 		// returns a lighter (or darker) color
 		// level should be a value from -255 to 255
-		this.lighter = function(level) {
-	        return this.lightness(this.lightness()+level)
-		}
-	
-		// ratio - What fraction to lighten by (a value from -1 to 1).
-		this.relLighter = function(ratio) {
-			return this.lighter(this.lightness()*ratio)
+		this.lighter = function(amount) {
+	        return this.lightness(this.lightness()+amount)
 		}
 	
 	
@@ -546,6 +531,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	            b: Math.round(r * .272 + g * .534 + b * .131)
 	        })
 	    }
+	
+		this.red = function() {
+	        return xolor({
+	            r: this.r,
+	            g: 0, b:0
+	        })
+		}
+	    this.green = function() {
+	        return xolor({
+	            g: this.g,
+	            r: 0, b:0
+	        })
+		}
+	    this.blue = function() {
+	        return xolor({
+	            b: this.b,
+	            r: 0, g:0
+	        })
+		}
 	
 	    this.inverse = function() {
 	        return xolor({
@@ -711,7 +715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    // position should be a number from 0 to 1 (inclusive) describing how far from the calling color you want to calculate the color
-	    this.gradientlevel = function (to, level) {
+	    this.gradient = function (to, level) {
 	        if (level < 0 || 1 < level) throw new Error('`level` must a number between 0 and 1 (inclusive)')
 	
 	        var a = this, b = xolor(to)
@@ -777,7 +781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	// http://www.w3.org/TR/css3-color/#svg-color
-	var color_names = {
+	var colorNames = {
 	    "aliceblue": "f0f8ff",
 	    "antiquewhite": "faebd7",
 	    "aqua": "0ff",

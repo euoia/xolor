@@ -98,10 +98,10 @@ Using xolor:
 ####Instance methods and properties:
 Xolor objects are always immutable - all operations on them return new objects. Any of these methods are, consequently, chainable.
 
-**`xolorObject.r`** - Returns the red part of the xolor.
-**`xolorObject.g`** - Returns the green part of the xolor.
-**`xolorObject.b`** - Returns the blue part of the xolor.
-**`xolorObject.a`** - Returns the alpha part of the xolor.
+**`xolorObject.r`** - Returns the red part of the xolor.  
+**`xolorObject.g`** - Returns the green part of the xolor.  
+**`xolorObject.b`** - Returns the blue part of the xolor.  
+**`xolorObject.a`** - Returns the alpha part of the xolor.  
 **`xolorObject.rbg`** - Returns an rbga object representing the color (like `{r:34,g:45,b:56,a:1}`).  
 **`xolorObject.css`** - Returns a css color string representing the color (either `"transparent"` or a css rbg or rbga string like `"rgb(1, 234, 56)"`).  
 **`xolorObject.fraction`** - Returns an rbga object where each property is a number from 0 to 1 representing a percentage of full color. To clarify, `xolor('rbg(10%,20%,30%)').fraction` would return `[0.1, 0.2, 0.3]`.  
@@ -137,16 +137,16 @@ Xolor objects are always immutable - all operations on them return new objects. 
 
 Each of these functions returns a new xolor object based on a function of two colors.
 
-**`xolorObject.opacity(topColor, opacity)`** - Returns the color that would show if `topColor` was over the `xolorObject`'s color with the given `opacity`.
-**`xolorObject.combine(otherColor)`** - Returns the two colors combined with a ximple XOR method.
-**`xolorObject.breed(otherColor)`** - Returns a xolor with random parts of each color.
-**`xolorObject.add(otherColor)`** - Returns the [additive mix](https://en.wikipedia.org/wiki/Additive_color) of the two colors.
-**`xolorObject.subtractive(otherColor)`** - Returns the [subtractive mix](https://en.wikipedia.org/wiki/Subtractive_color) of the two colors.
-**`xolorObject.subtract(otherColor)`** - Returns the subtraction of the two colors. I don't believe this is a standard color method.
-**`xolorObject.mult(otherColor)`** - Returns the multiplicative mix of the two colors
-**`xolorObject.multiply(otherColor)`** - Alias for `mult`.
-**`xolorObject.avg(otherColor)`** - Returns a color between the two colors by averaging the rgb parts.
-**`xolorObject.average(otherColor)`** - Alias for `avg`.
+**`xolorObject.opacity(topColor, opacity)`** - Returns the color that would show if `topColor` was over the `xolorObject`'s color with the given `opacity`.  
+**`xolorObject.combine(otherColor)`** - Returns the two colors combined with a ximple XOR method.  
+**`xolorObject.breed(otherColor)`** - Returns a xolor with random parts of each color.  
+**`xolorObject.add(otherColor)`** - Returns the [additive mix](https://en.wikipedia.org/wiki/Additive_color) of the two colors.  
+**`xolorObject.subtractive(otherColor)`** - Returns the [subtractive mix](https://en.wikipedia.org/wiki/Subtractive_color) of the two colors.  
+**`xolorObject.subtract(otherColor)`** - Returns the subtraction of the two colors. I don't believe this is a standard color method.  
+**`xolorObject.mult(otherColor)`** - Returns the multiplicative mix of the two colors.  
+**`xolorObject.multiply(otherColor)`** - Alias for `mult`.  
+**`xolorObject.avg(otherColor)`** - Returns a color between the two colors by averaging the rgb parts.  
+**`xolorObject.average(otherColor)`** - Alias for `avg`.  
 **`xolorObject.gradient(otherColor, position)`** - Returns the color on a gradient between the two colors at the given `position` on the gradient.
 * `otherColor` - Can be any value the `xolor` constructor can take in.
 * `position` - A number from 0 to 1 representing how close to `otherColor` the returned color should be (where 1 represents the `otherColor` exactly).

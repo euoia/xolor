@@ -125,15 +125,15 @@ Xolor objects are always immutable - all operations on them return new objects. 
    * `2` - Sun's grey filter method
    * `3` - An unknown grey filter method (I'm not sure where it came from)
 
-**`xolorObject.red()`** - Returns a xolor with just the red part.
-**`xolorObject.green()`** - Returns a xolor with just the green part.
-**`xolorObject.blue()`** - Returns a xolor with just the blue part.
+**`xolorObject.red()`** - Returns a xolor with just the red part.  
+**`xolorObject.green()`** - Returns a xolor with just the green part.  
+**`xolorObject.blue()`** - Returns a xolor with just the blue part.  
 **`xolorObject.web()`** - Returns a ["web safe"](https://en.wikipedia.org/wiki/Web_colors) xolor.  
 **`xolorObject.complementary()`** - Returns the [complementary color](https://en.wikipedia.org/wiki/Complementary_colors).  
 **`xolorObject.comp()`** - Alias for `complementary`.
 
 
-** Combinations two colors:**
+**Combinations two colors:**
 
 Each of these functions returns a new xolor object based on a function of two colors.
 
@@ -151,7 +151,7 @@ Each of these functions returns a new xolor object based on a function of two co
 * `otherColor` - Can be any value the `xolor` constructor can take in.
 * `position` - A number from 0 to 1 representing how close to `otherColor` the returned color should be (where 1 represents the `otherColor` exactly).
 
-** Related colors: **
+**Related colors:**
 
 The following methods return arrays of xolor objects.
 
@@ -165,7 +165,7 @@ The following methods return arrays of xolor objects.
 * `number` - *(Default:8)* The number of colors to return.
 * `slices` - *(Default:32)* I'm not entirely sure what this parameter is.
 
-** Miscellaneous: **
+**Miscellaneous:**
 
 **`xolorObject.distance(from)`** - Returns an integer representing the "distance" between the `xolorObject`'s color and the `from` color. `from` can be any value you can pass into the `xolor` constructor. See [here](http://www.compuphase.com/cmetric.htm) for details.
 

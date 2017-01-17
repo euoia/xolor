@@ -113,26 +113,6 @@ Xolor objects are always immutable - all operations on them return new objects. 
 **`xolorObject.int`** - Returns an integer where the least significant 2 bytes represent blue, the next 2 bytes represent green, the next 2 represent red, and the most significant bytes represent alpha.  
 **`xolorObject.name`** - Returns the closest name for the color from this list: http://www.w3.org/TR/css3-color/#svg-color 
 
-**`xolorObject.lightness(level)`** - Returns a xolor with the lightness changed to the given level (a number between 0 and 255).  
-**`xolorObject.relLightness(ratio)`** - Returns a xolor with the lightness changed by the passed `ratio` of the current lightness. For example, a `ratio` of `.5` darkens by 50% and `1.5` lightens by 50%.  
-**`xolorObject.lighter(amount)`** - Returns a xolor that is lighter by the given `amount` (a number between 0 and 255).
-
-**`xolorObject.sepia()`** - Returns a xolor filtered by [microsoft's sepia filter](http://msdn.microsoft.com/en-us/magazine/cc163866.aspx).  
-**`xolorObject.inverse()`** - Returns the inverse xolor.  
-**`xolorObject.greyfilter(method)`** - Returns a grey version of the xolor.
-* `method` - *(Default: 1)* Can be:
-   * `1` - Robert Eisele's grey filter method
-   * `2` - Sun's grey filter method
-   * `3` - An unknown grey filter method (I'm not sure where it came from)
-
-**`xolorObject.red()`** - Returns a xolor with just the red part.  
-**`xolorObject.green()`** - Returns a xolor with just the green part.  
-**`xolorObject.blue()`** - Returns a xolor with just the blue part.  
-**`xolorObject.web()`** - Returns a ["web safe"](https://en.wikipedia.org/wiki/Web_colors) xolor.  
-**`xolorObject.complementary()`** - Returns the [complementary color](https://en.wikipedia.org/wiki/Complementary_colors).  
-**`xolorObject.comp()`** - Alias for `complementary`.
-
-
 **Combinations two colors:**
 
 Each of these functions returns a new xolor object based on a function of two colors.
@@ -152,6 +132,30 @@ Each of these functions returns a new xolor object based on a function of two co
 * `position` - A number from 0 to 1 representing how close to `otherColor` the returned color should be (where 1 represents the `otherColor` exactly).
 
 **Related colors:**
+
+The following methods return a single xolor object:
+
+**`xolorObject.inverse()`** - Returns the inverse xolor.
+  
+**`xolorObject.web()`** - Returns a ["web safe"](https://en.wikipedia.org/wiki/Web_colors) xolor.  
+**`xolorObject.complementary()`** - Returns the [complementary color](https://en.wikipedia.org/wiki/Complementary_colors).  
+**`xolorObject.comp()`** - Alias for `complementary`.
+  
+**`xolorObject.sepia()`** - Returns a xolor filtered by [microsoft's sepia filter](http://msdn.microsoft.com/en-us/magazine/cc163866.aspx).  
+
+**`xolorObject.red()`** - Returns a xolor with just the red part.  
+**`xolorObject.green()`** - Returns a xolor with just the green part.  
+**`xolorObject.blue()`** - Returns a xolor with just the blue part.  
+  
+**`xolorObject.greyfilter(method)`** - Returns a grey version of the xolor.
+* `method` - *(Default: 1)* Can be:
+   * `1` - Robert Eisele's grey filter method
+   * `2` - Sun's grey filter method
+   * `3` - An unknown grey filter method (I'm not sure where it came from)
+
+**`xolorObject.lightness(level)`** - Returns a xolor with the lightness changed to the given level (a number between 0 and 255).  
+**`xolorObject.relLightness(ratio)`** - Returns a xolor with the lightness changed by the passed `ratio` of the current lightness. For example, a `ratio` of `.5` darkens by 50% and `1.5` lightens by 50%.  
+**`xolorObject.lighter(amount)`** - Returns a xolor that is lighter by the given `amount` (a number between 0 and 255).
 
 The following methods return arrays of xolor objects.
 
@@ -206,6 +210,7 @@ Todo
   * http://lesscss.org/functions/#color-operations
   * http://lesscss.org/functions/#color-blending
 * Incorporate color methods from the "other useful javascript color modules"
+* Incorporate missing methods listed here: http://stackoverflow.com/questions/10266123/hex-rgb-color-manipulation-methods/10266506#10266506
 * Write tests
 
 Thanks

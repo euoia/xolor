@@ -7,14 +7,24 @@ An extensive color manipulation library for the browser and node.js. While exten
 Calculating Colors
 ---
 ```javascript
+
+var c = xolor('#c00')
+
 // Calculate a grey level color value
-xolor('#c00').greyfilter()
+c.greyfilter()
 
 // Calculate a gradient color between #fc0 and #f00 23% of the way through the gradient
-xolor('#fc0').gradientlevel('#f00', .23)
+c.gradient('#f00', .23)
 
 // Calculate the visible color when lightgrey is overlayed on top of #f00 with an opacity of 69%.
-xolor('#f00').opacity('lightgrey', 0.69)
+c.opacity('lightgrey', .69)
+
+// Return a color that's 10% lighter
+c.lightness(1.1 * c.lightness())
+
+// Chain them together
+c.subtractive('#2a3e37').lighter(.1).triad()
+
 ```
 
 Colorizing Text
@@ -59,14 +69,14 @@ xolor; // xolor.umd.js can define xolor globally if you really
 
 Using xolor:
 
-**`xolor(cssColorString)`** - Constructor. Takes in either a css color like `"lightskyblue"`, `"#fff"`, `"#fff000"`, `"rgb(1, 234, 56)"`, `"rgb(66%, 55%, 44%)"`, or  
-**`xolor(rgbObject)`** - an rgb object like `{r:34,g:45,b:56}`, or  
-**`xolor(rgbString)`** - a comma-sparated rgb string like `"34,45,56"`, or  
-**`xolor(rgbArray)`** - an array where each element is interpreted as an rgba component [r,g,b,a] like `[34,45,56]`, or  
+**`xolor(cssColorString)`** - Constructor. Takes in either a css color like `"lightskyblue"`, `"#fff"`, `"#fff000"`, `"rgb(1, 234, 56)"`, `"rgb(66%, 55%, 44%)"`,  
+**`xolor(rgbObject)`** - an rgb object like `{r:34,g:45,b:56}`,  
+**`xolor(rgbString)`** - a comma-sparated rgb string like `"34,45,56"`,  
+**`xolor(rgbArray)`** - an array where each element is interpreted as an rgba component [r,g,b,a] like `[34,45,56]`,  
 **`xolor(hslColorString)`** - an [hsl/hsb](https://en.wikipedia.org/wiki/HSL_and_HSV) color like `"hsl(10, 90, 20)"` or `"hsb(10, 90, 20)"`  
-**`xolor(hslObject)`** - an hsl object like `{h:10,s:90,l:20}` or `{h:10,s:90,b:20}`, or  
+**`xolor(hslObject)`** - an hsl object like `{h:10,s:90,l:20}` or `{h:10,s:90,b:20}`,  
 **`xolor(hsvColorString)`** - an [hsv](https://en.wikipedia.org/wiki/HSL_and_HSV) color like `"hsv(64, 40, 16)"`  
-**`xolor(hslObject)`** - an hsv object like `{h:64,s:40,v:16}`, or  
+**`xolor(hslObject)`** - an hsv object like `{h:64,s:40,v:16}`,  
 **`xolor(integer)`** - an integer where the least significant 2 bytes represent blue, the next 2 bytes represent green, the next 2 represent red, and the most significant bytes represent alpha.
 
 **`xolor(xolorObject)`** - Returns a copy of the passed in xolor object.
@@ -96,18 +106,17 @@ Using xolor:
   * `"pillow"` - A smooth gradient between `from` and `to` and back to `from`.
 
 ####Instance methods and properties:
-Xolor objects are always immutable - all operations on them return new objects. Any of these methods are, consequently, chainable.
 
-**`xolorObject.r`** - Returns the red part of the xolor.  
-**`xolorObject.g`** - Returns the green part of the xolor.  
-**`xolorObject.b`** - Returns the blue part of the xolor.  
-**`xolorObject.a`** - Returns the alpha part of the xolor.  
+**`xolorObject.r`** - Returns the red part of the xolor. Setting this value mutates the color.  
+**`xolorObject.g`** - Returns the green part of the xolor. Setting this value mutates the color.  
+**`xolorObject.b`** - Returns the blue part of the xolor. Setting this value mutates the color.  
+**`xolorObject.a`** - Returns the alpha part of the xolor. Setting this value mutates the color.  
 **`xolorObject.rbg`** - Returns an rbga object representing the color (like `{r:34,g:45,b:56,a:1}`).  
 **`xolorObject.css`** - Returns a css color string representing the color (either `"transparent"` or a css rbg or rbga string like `"rgb(1, 234, 56)"`).  
 **`xolorObject.fraction`** - Returns an rbga object where each property is a number from 0 to 1 representing a percentage of full color. To clarify, `xolor('rbg(10%,20%,30%)').fraction` would return `[0.1, 0.2, 0.3]`.  
 **`xolorObject.array`** - Returns an array where each element represents an rgba value. To clarify, `xolor('rbg(20,50,100)').array` would return `[20,50,100]`.  
-**`xolorObject.hsl`** - Returns an hsla object representing the color.  
-**`xolorObject.hsv`** - Returns an hsva object representing the color.  
+**`xolorObject.hsl`** - Returns an [hsla](https://en.wikipedia.org/wiki/HSL_and_HSV) object representing the color in Hue-Saturation-Lightness format.  
+**`xolorObject.hsv`** - Returns an [hsva](https://en.wikipedia.org/wiki/HSL_and_HSV) object representing the color in Hue-Saturation-Value format.  
 **`xolorObject.hex`** - Returns a hex string value representing the color.  
 **`xolorObject.toString()`** - Same as `xolorObject.hex`.  
 **`xolorObject.int`** - Returns an integer where the least significant 2 bytes represent blue, the next 2 bytes represent green, the next 2 represent red, and the most significant bytes represent alpha.  
@@ -115,9 +124,10 @@ Xolor objects are always immutable - all operations on them return new objects. 
 
 **Combinations two colors:**
 
-Each of these functions returns a new xolor object based on a function of two colors.
+Each of these functions returns a new xolor object based on a function of two colors. 
+Xolor objects are never mutated by commands on them - all methods return new objects and are, consequently, chainable.
 
-**`xolorObject.opacity(topColor, opacity)`** - Returns the color that would show if `topColor` was over the `xolorObject`'s color with the given `opacity`.  
+**`xolorObject.blend(topColor, opacity)`** - Returns the color that would show if `topColor` was over the `xolorObject`'s color with the given `opacity`.  
 **`xolorObject.combine(otherColor)`** - Returns the two colors combined with a ximple XOR method.  
 **`xolorObject.breed(otherColor)`** - Returns a xolor with random parts of each color.  
 **`xolorObject.add(otherColor)`** - Returns the [additive mix](https://en.wikipedia.org/wiki/Additive_color) of the two colors.  
@@ -135,27 +145,36 @@ Each of these functions returns a new xolor object based on a function of two co
 
 The following methods return a single xolor object:
 
-**`xolorObject.inverse()`** - Returns the inverse xolor.
-  
+**`xolorObject.inverse()`** - Returns the inverse xolor.  
 **`xolorObject.web()`** - Returns a ["web safe"](https://en.wikipedia.org/wiki/Web_colors) xolor.  
-**`xolorObject.complementary()`** - Returns the [complementary color](https://en.wikipedia.org/wiki/Complementary_colors).  
-**`xolorObject.comp()`** - Alias for `complementary`.
-  
-**`xolorObject.sepia()`** - Returns a xolor filtered by [microsoft's sepia filter](http://msdn.microsoft.com/en-us/magazine/cc163866.aspx).  
+**`xolorObject.complementary()`** - Returns of the [complementary color](https://en.wikipedia.org/wiki/Complementary_colors) as a a xolor object.  
+**`xolorObject.comp()`** - Alias for `complementary`.  
 
 **`xolorObject.red()`** - Returns a xolor with just the red part.  
 **`xolorObject.green()`** - Returns a xolor with just the green part.  
 **`xolorObject.blue()`** - Returns a xolor with just the blue part.  
-  
+
+**Color Attributes:**  
+These methods return a color attribute when called with no argument, and return a new `xolor` object with that attribute modified if you do pass an argument.
+
+**`xolorObject.lightness()`** - Returns the lightness level (a number between 0 and 255).  
+**`xolorObject.lightness(level)`** - Returns a xolor with the lightness changed to the given `level` (a number between 0 and 255).  
+**`xolorObject.hue()`** - Returns the hue (a number between 0 and 360).  
+**`xolorObject.hue(newHue)`** - Returns a xolor with the hue changed to the passed `newHue` (a number between 0 and 360).  
+**`xolorObject.saturation()`** - Returns the saturation as caluated in the HSV model (a number between 0 and 1).  
+**`xolorObject.saturation(newSaturation)`** - Returns a xolor with the hue (*as caluated in the HSV model*) changed to the passed `newSaturation` (a number between 0 and 1).  
+**`xolorObject.brightness()`** - Returns the brightness (aka "value") as caluated in the HSV model (a number between 0 and 1).  
+**`xolorObject.brightness(newValue)`** - Returns a xolor with the brightness (aka "value", *as caluated in the HSV model*) changed to the passed `newValue` (a number between 0 and 1).  
+
+**`xolorObject.luminosity()`** - Returns the [WCAG luminosity](https://www.w3.org/TR/WCAG20/#relativeluminancedef) (a number between 0 and 1).  
+
+**Filters**:  
+**`xolorObject.sepia()`** - Returns a xolor filtered by [microsoft's sepia filter](http://msdn.microsoft.com/en-us/magazine/cc163866.aspx).  
 **`xolorObject.greyfilter(method)`** - Returns a grey version of the xolor.
 * `method` - *(Default: 1)* Can be:
    * `1` - Robert Eisele's grey filter method
    * `2` - Sun's grey filter method
    * `3` - An unknown grey filter method (I'm not sure where it came from)
-
-**`xolorObject.lightness(level)`** - Returns a xolor with the lightness changed to the given level (a number between 0 and 255).  
-**`xolorObject.relLightness(ratio)`** - Returns a xolor with the lightness changed by the passed `ratio` of the current lightness. For example, a `ratio` of `.5` darkens by 50% and `1.5` lightens by 50%.  
-**`xolorObject.lighter(amount)`** - Returns a xolor that is lighter by the given `amount` (a number between 0 and 255).
 
 The following methods return arrays of xolor objects.
 
@@ -169,9 +188,13 @@ The following methods return arrays of xolor objects.
 * `number` - *(Default:8)* The number of colors to return.
 * `slices` - *(Default:32)* I'm not entirely sure what this parameter is.
 
+**`xolorObject.schemeFromDegrees(hueDegreesArray)`** - Returns an array of xolor objects the same length as the array passed in. For example, `xolor('red').schemeFromDegrees([0, 120, 240])` is a triadic color scheme.
+* `hueDegreesArray` - An array where each element is a number of degrees representing a color with a hue (0-360) that many degrees from the original color.
+
 **Miscellaneous:**
 
-**`xolorObject.distance(from)`** - Returns an integer representing the "distance" between the `xolorObject`'s color and the `from` color. `from` can be any value you can pass into the `xolor` constructor. See [here](http://www.compuphase.com/cmetric.htm) for details.
+**`xolorObject.distance(fromColor)`** - Returns an integer representing the "distance" between the `xolorObject`'s color and the `fromColor` color. `fromColor` can be any value you can pass into the `xolor` constructor (a number between 0 and 441.67). See [here](http://www.compuphase.com/cmetric.htm) for details.  
+**`xolorObject.contrast(color2)`** - Returns the [WCAG contrast](https://www.w3.org/TR/WCAG20/#contrast-ratiodef) between the two colors (a number between 1 and 21).
 
 How to Contribute!
 ============
@@ -197,6 +220,10 @@ How to submit pull requests:
 Change Log
 =========
 
+* 1.2.0
+	* Adding hue, saturation, brightness, luminosity, schemeFromDegrees, and contrast
+	* Removing relLightness and lighter
+	* Changing `opacity` to `blend`
 * 1.1.8 - Fixing colorize and adding full documentation
 * 1.1.0 - Changed lightness and relLightness from getter/setters to functions
 * 1.0.0 - Created based on https://github.com/infusion/jQuery-xcolor
@@ -212,6 +239,10 @@ Todo
 * Incorporate color methods from the "other useful javascript color modules"
 * Incorporate missing methods listed here: http://stackoverflow.com/questions/10266123/hex-rgb-color-manipulation-methods/10266506#10266506
 * Write tests
+* Add HSI support
+* Add HWB support
+  * Add 'whiteness' and 'blackness' methods
+* Add CMYK support
 
 Thanks
 ========
@@ -227,7 +258,10 @@ Other useful javacript color modules
 =======
 
 These modules may have manipulation methods not contained in this library:
-* https://github.com/Qix-/color
+
 * https://github.com/brehaut/color-js
 * https://github.com/mbjordan/Colors
 * https://github.com/gka/chroma.js
+
+These modules have manipulations that are already contained in this xolor library as of last checking:
+* https://github.com/Qix-/color

@@ -448,21 +448,56 @@ var xolor = module.exports = proto(function() {
             return xolor({r: r, g: g, b: b})
         }
 	}
-
-    // relative lightness
-    // returns a new xolor with the lightness level based on a ratio of the current lightness
-	    // e.g. .5 darkens by 50% and 1.5 lightens by 50%
-    this.relLightness = function(ratio) {
-        return this.lightness(this.lightness()*ratio)
+	
+	this.hue = function(hue) {
+        var curHSL = this.hsl
+        if(hue === undefined) {
+            return curHSL.h
+        } else {
+            curHSL.h = hue
+            return xolor(curHSL)
+        }
     }
+	
+	this.saturation = function(saturation) {
+        var curHSV = this.hsv
+        if(saturation === undefined) {
+            return curHSV.s
+        } else {
+            curHSV.s = hue
+            return xolor(curHSV)
+        }
+    }
+	
+	this.brightness = function(value) {
+        var curHSV = this.hsv
+        if(value === undefined) {
+            return curHSV.v
+        } else {
+            curHSV.v = value
+            return xolor(curHSV)
+        }
+    }
+    this.value = this.brightness
+    
+    // https://www.w3.org/TR/WCAG20/#relativeluminancedef
+    // todo: how do you set luminosity?
+    this.luminosity = function() {
+        var rgb = this.rgb().color;
 
-	// returns a lighter (or darker) color
-	// level should be a value from -255 to 255
-	this.lighter = function(amount) {
-        return this.lightness(this.lightness()+amount)
-	}
+		var lum = {}
+		for(var k in {r:1,g:1,b:1}) {
+		    var value = this[k]/255
+		    if(value <= 0.03928) {
+		        lum[k] = value/12.92    
+            } else {
+		        lum[k] = Math.pow(((value + 0.055) / 1.055), 2.4)
+            }
+		}
 
-
+		return 0.2126*lum.r + 0.7152*lum.g + 0.0722*lum.b   
+    }
+    
     // Microsoft's sepia function http://msdn.microsoft.com/en-us/magazine/cc163866.aspx
     this.sepia = function() {
         var r = this.r, g = this.g, b = this.b
@@ -500,7 +535,7 @@ var xolor = module.exports = proto(function() {
         })
     }
 
-    this.opacity = function (topColor, opacity) {        
+    this.blend = function (topColor, opacity) {        
         if(opacity > 1) {
             opacity /= 100
         }
@@ -543,6 +578,18 @@ var xolor = module.exports = proto(function() {
 
         // Approximation attempt of http://www.compuphase.com/cmetric.htm
         return Math.sqrt(3 * (b.r - a.r) * (b.r - a.r) + 4 * (b.g - a.g) * (b.g - a.g) + 2 * (b.b - a.b) * (b.b - a.b))
+    }
+    
+    this.contrast = function(color2) {
+        // http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+		var lum1 = this.luminosity()
+		var lum2 = xolor(color2).luminosity()
+
+		if (lum1 > lum2) {
+			return (lum1 + 0.05) / (lum2 + 0.05)
+		}
+
+		return (lum2 + 0.05) / (lum1 + 0.05)   
     }
 
     //
@@ -638,6 +685,50 @@ var xolor = module.exports = proto(function() {
         })
     }
 
+    // position should be a number from 0 to 1 (inclusive) describing how far from the calling color you want to calculate the color
+    this.gradient = function (to, level) {
+        if (level < 0 || 1 < level) throw new Error('`level` must a number between 0 and 1 (inclusive)')
+
+        var a = this, b = xolor(to)
+
+        var raisedLevel = level*1000
+        return xolor({
+            r: (a.r + ((b.r - a.r) / 1000) * raisedLevel)|0,
+            g: (a.g + ((b.g - a.g) / 1000) * raisedLevel)|0,
+            b: (a.b + ((b.b - a.b) / 1000) * raisedLevel)|0
+        })
+    }
+    
+    this.comp = this.complementary = function() {     
+        return this.schemeFromDegrees([180])[0]
+        // var hsl = this.hsl
+        // hsl["h"] = (hsl["h"] + 180) % 360
+        // return xolor(hsl)
+    }
+    
+    this.schemeFromDegrees = function(degrees) {
+        return degrees.map(function(degree) {
+            return this.hue((this.hue()+degree)%360)
+        }.bind(this))
+    }        
+
+    // split complement
+    this.splitcomp = this.splitcomplement = function () {
+        return this.schemeFromDegrees([0,72,144])
+        // var hsv = this.hsv
+        // var ret = [this]
+        //
+        // hsv["h"]+= 72;
+        // hsv["h"]%= 360;
+        // ret.push(new xolor(hsv))
+        //
+        // hsv["h"]+= 144;
+        // hsv["h"]%= 360;
+        // ret.push(new xolor(hsv))
+        //
+        // return ret
+    }
+
     this.triad = function () {
         return [
             this,
@@ -655,20 +746,6 @@ var xolor = module.exports = proto(function() {
         ]
     }
 
-    // position should be a number from 0 to 1 (inclusive) describing how far from the calling color you want to calculate the color
-    this.gradient = function (to, level) {
-        if (level < 0 || 1 < level) throw new Error('`level` must a number between 0 and 1 (inclusive)')
-
-        var a = this, b = xolor(to)
-
-        var raisedLevel = level*1000
-        return xolor({
-            r: (a.r + ((b.r - a.r) / 1000) * raisedLevel)|0,
-            g: (a.g + ((b.g - a.g) / 1000) * raisedLevel)|0,
-            b: (a.b + ((b.b - a.b) / 1000) * raisedLevel)|0
-        })
-    }
-
     this.analogous = function (number, slices) {
         if(number === undefined) number = 8
         if(slices === undefined) slices = 30
@@ -680,28 +757,6 @@ var xolor = module.exports = proto(function() {
             hsv["h"]%= 360;
             ret.push(xolor(hsv))
         }
-        return ret
-    }
-
-    this.comp = this.complementary = function() {
-        var hsl = this.hsl
-        hsl["h"] = (hsl["h"] + 180) % 360
-        return xolor(hsl)
-    }
-
-    // split complement
-    this.splitcomp = this.splitcomplement = function () {
-        var hsv = this.hsv
-        var ret = [this]
-
-        hsv["h"]+= 72;
-        hsv["h"]%= 360;
-        ret.push(new xolor(hsv))
-
-        hsv["h"]+= 144;
-        hsv["h"]%= 360;
-        ret.push(new xolor(hsv))
-
         return ret
     }
 

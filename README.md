@@ -104,7 +104,7 @@ Using xolor:
   * `"flip"` - Flips between `from` and `to` every visible character.
   * `"pillow"` - A smooth gradient between `from` and `to` and back to `from`.
 
-####Instance methods and properties:
+#### Instance methods and properties:
 
 **`xolorObject.r`** - Returns the red part of the xolor. Setting this value mutates the color.  
 **`xolorObject.g`** - Returns the green part of the xolor. Setting this value mutates the color.  

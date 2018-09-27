@@ -10,13 +10,10 @@ Calculating Colors
 
 var c = xolor('#c00')
 
-// Calculate a grey level color value
-c.greyfilter()
-
 // Calculate a gradient color between #fc0 and #f00 23% of the way through the gradient
 c.gradient('#f00', .23)
 
-// Calculate the visible color when lightgrey is overlayed on top of #f00 with an opacity of 69%.
+// Calculate the visible color when lightgrey is overlayed on top of #c00 with an opacity of 69%.
 c.opacity('lightgrey', .69)
 
 // Return a color that's 10% lighter
@@ -25,6 +22,8 @@ c.lightness(1.1 * c.lightness())
 // Chain them together
 c.subtractive('#2a3e37').lighter(.1).triad()
 
+// Converts the color to a related grey color
+c.greyfilter()
 ```
 
 Colorizing Text

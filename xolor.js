@@ -464,7 +464,7 @@ var xolor = module.exports = proto(function() {
         if(saturation === undefined) {
             return curHSV.s
         } else {
-            curHSV.s = hue
+            curHSV.s = saturation;
             return xolor(curHSV)
         }
     }
